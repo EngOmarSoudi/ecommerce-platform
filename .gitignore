@@ -1,24 +1,67 @@
-*.log
-.DS_Store
+# Environment variables
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
+
+# IDEs
 /.idea
-/.nova
-/.phpunit.cache
 /.vscode
+/.fleet
+/.nova
 /.zed
-/auth.json
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.phpactor.json
+
+# Laravel
+/vendor
 /node_modules
 /public/build
 /public/hot
 /public/storage
 /storage/*.key
 /storage/pail
-/vendor
+/.phpunit.cache
+/.phpunit.result.cache
 Homestead.json
 Homestead.yaml
-Thumbs.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.docker
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database
+*.sqlite
+*.sqlite3
+
+# Composer
+auth.json
+composer.phar
+
+# Testing
+.clover
+.cov
+coverage/
+
+# IDE helper files
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# Laravel Sail
+.dockerignore
