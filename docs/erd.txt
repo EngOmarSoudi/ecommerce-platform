@@ -1,0 +1,414 @@
+E-commerce Platform ERD
+=======================
+
+Users
+-----
+id (PK)
+name
+email
+password
+email_verified_at
+created_at
+updated_at
+
+Roles
+-----
+id (PK)
+name
+description
+created_at
+updated_at
+
+Permissions
+-----------
+id (PK)
+name
+description
+created_at
+updated_at
+
+User_Roles (Many-to-Many)
+-------------------------
+user_id (FK)
+role_id (FK)
+
+Role_Permissions (Many-to-Many)
+-------------------------------
+role_id (FK)
+permission_id (FK)
+
+Categories
+----------
+id (PK)
+name
+slug
+description
+parent_id (FK to categories.id for subcategories)
+created_at
+updated_at
+
+Brands
+------
+id (PK)
+name
+slug
+description
+created_at
+updated_at
+
+Attributes
+----------
+id (PK)
+name
+slug
+type (string, integer, boolean, etc.)
+created_at
+updated_at
+
+Attribute_Values
+----------------
+id (PK)
+attribute_id (FK)
+value
+created_at
+updated_at
+
+Products
+--------
+id (PK)
+name
+slug
+sku
+description
+short_description
+brand_id (FK)
+category_id (FK)
+status (draft, published, archived)
+created_at
+updated_at
+
+Product_Descriptions
+--------------------
+id (PK)
+product_id (FK)
+language
+content
+created_at
+updated_at
+
+Product_Media
+-------------
+id (PK)
+product_id (FK)
+media_type (image, video)
+file_path
+alt_text
+sort_order
+created_at
+updated_at
+
+SKUs
+----
+id (PK)
+product_id (FK)
+sku
+name
+description
+price
+compare_at_price
+cost_price
+quantity
+weight
+dimensions (length, width, height)
+status (active, inactive, discontinued)
+created_at
+updated_at
+
+Units
+-----
+id (PK)
+name
+description
+conversion_factor (to base unit)
+created_at
+updated_at
+
+SKU_Units (Many-to-Many)
+------------------------
+sku_id (FK)
+unit_id (FK)
+quantity_per_unit
+price_modifier
+
+Warehouses
+----------
+id (PK)
+name
+code
+address
+city
+state
+postal_code
+country
+contact_person
+phone
+email
+status (active, inactive)
+created_at
+updated_at
+
+Stock_Levels
+------------
+id (PK)
+warehouse_id (FK)
+sku_id (FK)
+quantity_on_hand
+quantity_reserved
+reorder_point
+max_stock_level
+created_at
+updated_at
+
+Stock_Movements
+---------------
+id (PK)
+warehouse_id (FK)
+sku_id (FK)
+movement_type (in, out, adjustment)
+quantity
+reference_type (order, purchase_order, adjustment)
+reference_id
+notes
+created_at
+created_by (FK to users.id)
+
+Carts
+-----
+id (PK)
+user_id (FK, nullable)
+session_id
+created_at
+updated_at
+expires_at
+
+Cart_Items
+----------
+id (PK)
+cart_id (FK)
+sku_id (FK)
+quantity
+unit_id (FK)
+unit_price
+created_at
+updated_at
+
+Orders
+------
+id (PK)
+user_id (FK)
+order_number
+status (pending, confirmed, processing, shipped, delivered, cancelled, refunded)
+currency
+subtotal
+tax_amount
+shipping_amount
+discount_amount
+total_amount
+notes
+created_at
+updated_at
+
+Order_Items
+-----------
+id (PK)
+order_id (FK)
+sku_id (FK)
+name
+sku_code
+unit_price
+quantity
+total_price
+created_at
+updated_at
+
+Shipments
+---------
+id (PK)
+order_id (FK)
+tracking_number
+carrier
+shipping_method
+status (pending, shipped, in_transit, delivered, returned)
+shipped_at
+delivered_at
+estimated_delivery_at
+notes
+created_at
+updated_at
+
+Order_Events
+------------
+id (PK)
+order_id (FK)
+event_type (created, confirmed, processing, shipped, delivered, cancelled, etc.)
+description
+created_at
+created_by (FK to users.id)
+
+Payments
+--------
+id (PK)
+order_id (FK)
+payment_method
+transaction_id
+amount
+currency
+status (pending, completed, failed, refunded)
+processed_at
+notes
+created_at
+updated_at
+
+Refunds
+-------
+id (PK)
+payment_id (FK)
+order_id (FK)
+amount
+currency
+reason
+status (pending, approved, rejected, completed)
+processed_at
+notes
+created_at
+updated_at
+
+Transactions
+------------
+id (PK)
+payment_id (FK)
+transaction_type (charge, refund, authorization)
+amount
+currency
+status
+gateway_response
+processed_at
+created_at
+
+Sellers
+-------
+id (PK)
+user_id (FK)
+business_name
+business_registration_number
+tax_id
+status (pending, approved, suspended)
+created_at
+updated_at
+
+Seller_Stores
+-------------
+id (PK)
+seller_id (FK)
+name
+slug
+description
+logo_path
+cover_image_path
+domain
+status (active, inactive)
+created_at
+updated_at
+
+Seller_Documents
+----------------
+id (PK)
+seller_id (FK)
+document_type (business_license, tax_certificate, etc.)
+file_path
+status (pending, approved, rejected)
+uploaded_at
+approved_at
+approved_by (FK to users.id)
+
+Promotions
+----------
+id (PK)
+name
+description
+promotion_type (discount, free_shipping, buy_x_get_y)
+value
+value_type (percentage, fixed_amount)
+start_date
+end_date
+usage_limit
+usage_count
+status (active, inactive, expired)
+created_at
+updated_at
+
+Coupons
+-------
+id (PK)
+promotion_id (FK)
+code
+usage_limit_per_user
+created_at
+updated_at
+
+Promotion_Categories (Many-to-Many)
+-----------------------------------
+promotion_id (FK)
+category_id (FK)
+
+Promotion_Products (Many-to-Many)
+---------------------------------
+promotion_id (FK)
+product_id (FK)
+
+Audit_Logs
+----------
+id (PK)
+user_id (FK, nullable)
+model_type
+model_id
+action (created, updated, deleted)
+old_values (JSON)
+new_values (JSON)
+ip_address
+user_agent
+created_at
+
+Relationships:
+=============
+- Users <-> Roles (Many-to-Many)
+- Roles <-> Permissions (Many-to-Many)
+- Categories <-> Categories (Self-referencing for subcategories)
+- Products -> Brands (Many-to-One)
+- Products -> Categories (Many-to-One)
+- Products -> Product_Descriptions (One-to-Many)
+- Products -> Product_Media (One-to-Many)
+- Products -> SKUs (One-to-Many)
+- SKUs -> Units (Many-to-Many through SKU_Units)
+- SKUs -> Stock_Levels (One-to-Many)
+- Warehouses -> Stock_Levels (One-to-Many)
+- Warehouses -> Stock_Movements (One-to-Many)
+- SKUs -> Stock_Movements (One-to-Many)
+- Users -> Carts (One-to-Many)
+- Carts -> Cart_Items (One-to-Many)
+- Cart_Items -> SKUs (Many-to-One)
+- Users -> Orders (One-to-Many)
+- Orders -> Order_Items (One-to-Many)
+- Order_Items -> SKUs (Many-to-One)
+- Orders -> Shipments (One-to-Many)
+- Orders -> Order_Events (One-to-Many)
+- Orders -> Payments (One-to-Many)
+- Payments -> Transactions (One-to-Many)
+- Payments -> Refunds (One-to-Many)
+- Users -> Sellers (One-to-One)
+- Sellers -> Seller_Stores (One-to-Many)
+- Sellers -> Seller_Documents (One-to-Many)
+- Promotions -> Coupons (One-to-Many)
+- Promotions <-> Categories (Many-to-Many)
+- Promotions <-> Products (Many-to-Many)
+- Users -> Audit_Logs (One-to-Many)

@@ -15,3 +15,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('api')->get('/health', [HealthCheckController::class, 'index']);
+
+Route::prefix('v1')->group(function () {
+    Route::get('/categories', function () {
+        return response()->json([
+            'data' => \App\Models\Category::all()
+        ]);
+    });
+    
+    Route::get('/products', function () {
+        return response()->json([
+            'data' => \App\Models\Product::with('skus')->get()
+        ]);
+    });
+});
