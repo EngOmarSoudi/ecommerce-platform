@@ -199,67 +199,18 @@ Route::prefix('v1')->group(function () {
      */
     Route::post('/auth/social/login', [\App\Http\Controllers\Api\SocialAuthController::class, 'socialLogin']);
     
-    /**
-     * @OA\Get(
-     *     path="/api/v1/categories",
-     *     summary="Get all categories",
-     *     tags={"Categories"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of categories",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Category"))
-     *         )
-     *     )
-     * )
-     */
-    Route::get('/categories', function () {
-        return response()->json([
-            'data' => \App\Models\Category::all()
-        ]);
-    });
+    // Categories
+    Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
+    Route::get('/categories/tree', [\App\Http\Controllers\Api\CategoryController::class, 'tree']);
+    Route::get('/categories/{id}', [\App\Http\Controllers\Api\CategoryController::class, 'show']);
+    Route::get('/categories/{id}/products', [\App\Http\Controllers\Api\CategoryController::class, 'products']);
     
-    /**
-     * @OA\Get(
-     *     path="/api/v1/products",
-     *     summary="Get all products with pagination",
-     *     tags={"Products"},
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number",
-     *         @OA\Schema(type="integer", example=1)
-     *     ),
-     *     @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="Items per page",
-     *         @OA\Schema(type="integer", example=15)
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of products",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Product")),
-     *             @OA\Property(property="pagination", ref="#/components/schemas/Pagination")
-     *         )
-     *     )
-     * )
-     */
-    Route::get('/products', function () {
-        $products = \App\Models\Product::with('skus')
-            ->paginate(15);
-        
-        return response()->json([
-            'data' => $products->items(),
-            'pagination' => [
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'per_page' => $products->perPage(),
-                'total' => $products->total(),
-            ]
-        ]);
-    });
+    // Products
+    Route::get('/products', [\App\Http\Controllers\Api\ProductController::class, 'index']);
+    Route::get('/products/search', [\App\Http\Controllers\Api\ProductController::class, 'index']);
+    Route::get('/products/suggestions', [\App\Http\Controllers\Api\ProductController::class, 'suggestions']);
+    Route::get('/products/{id}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
+    Route::get('/products/sku/{sku}', [\App\Http\Controllers\Api\ProductController::class, 'getBySku']);
     
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
