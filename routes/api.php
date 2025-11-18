@@ -223,6 +223,9 @@ Route::prefix('v1')->group(function () {
     Route::delete('/cart/items/{cartItemId}', [\App\Http\Controllers\Api\CartController::class, 'removeItem']);
     Route::delete('/cart', [\App\Http\Controllers\Api\CartController::class, 'clear']);
     
+    // Payment Webhooks (public - no auth required)
+    Route::post('/webhooks/payments', [\App\Http\Controllers\Api\OrderController::class, 'webhook']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         /**
@@ -295,5 +298,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/products/{productId}/reviews', [\App\Http\Controllers\Api\ProductReviewController::class, 'store']);
         Route::put('/products/{productId}/reviews/{reviewId}', [\App\Http\Controllers\Api\ProductReviewController::class, 'update']);
         Route::delete('/products/{productId}/reviews/{reviewId}', [\App\Http\Controllers\Api\ProductReviewController::class, 'destroy']);
+        
+        // Orders (protected)
+        Route::get('/orders', [\App\Http\Controllers\Api\OrderController::class, 'index']);
+        Route::post('/orders', [\App\Http\Controllers\Api\OrderController::class, 'store']);
+        Route::get('/orders/{orderId}', [\App\Http\Controllers\Api\OrderController::class, 'show']);
     });
 });
