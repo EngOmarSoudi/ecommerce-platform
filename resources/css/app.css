@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Design system components */
+@layer components {
+  /* Buttons */
+  .btn { @apply inline-flex items-center justify-center rounded-md font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-brand.primary/40 disabled:opacity-50 disabled:cursor-not-allowed; }
+  .btn-primary { @apply btn bg-brand.primary text-white hover:bg-brand.primary/90 px-5 py-3 shadow-md; }
+  .btn-secondary { @apply btn bg-brand.secondary text-white hover:bg-brand.secondary/90 px-5 py-3 shadow-md; }
+  .btn-outline { @apply btn border border-brand.primary text-brand.primary bg-transparent hover:bg-brand.primary hover:text-white px-5 py-3; }
+  .btn-disabled { @apply btn bg-gray-300 text-gray-600 cursor-not-allowed; }
+
+  /* Inputs */
+  .input { @apply w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-brand.primary focus:ring-brand.primary; }
+  .select { @apply input appearance-none; }
+  .checkbox { @apply rounded border-gray-300 text-brand.primary focus:ring-brand.primary; }
+  .radio { @apply border-gray-300 text-brand.primary focus:ring-brand.primary; }
+  .file-upload { @apply block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:border-brand.primary; }
+
+  /* Cards */
+  .card { @apply bg-white rounded-lg shadow-md p-6; }
+  .card-hover { @apply transition hover:shadow-lg; }
+
+  /* Badges & Tags */
+  .badge { @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium; }
+  .badge-success { @apply badge bg-brand.success/10 text-brand.success; }
+  .badge-warning { @apply badge bg-brand.warning/10 text-brand.warning; }
+  .badge-error { @apply badge bg-brand.error/10 text-brand.error; }
+  .tag { @apply inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-700; }
+
+  /* Spacing utilities (aliases) */
+  .section { @apply py-16 md:py-24; }
+  .container { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+
+  /* Shadows & Radius */
+  .shadow-soft { @apply shadow; }
+  .shadow-strong { @apply shadow-lg; }
+  .radius-md { @apply rounded-md; }
+  .radius-lg { @apply rounded-lg; }
+}

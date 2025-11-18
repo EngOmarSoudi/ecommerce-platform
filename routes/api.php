@@ -197,7 +197,7 @@ Route::prefix('v1')->group(function () {
      *     )
      * )
      */
-    Route::post('/auth/social/login', [\App\Http\Controllers\Api\SocialAuthController::class, 'socialLogin']);
+    Route::get('/metrics', [\App\Http\Controllers\Api\MetricsController::class, 'index']);
     
     // Categories
     Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
