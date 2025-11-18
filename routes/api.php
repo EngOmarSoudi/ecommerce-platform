@@ -215,6 +215,14 @@ Route::prefix('v1')->group(function () {
     // Product Reviews (public - read only)
     Route::get('/products/{productId}/reviews', [\App\Http\Controllers\Api\ProductReviewController::class, 'index']);
     
+    // Cart (available for both guest and authenticated users)
+    Route::get('/cart', [\App\Http\Controllers\Api\CartController::class, 'index']);
+    Route::get('/cart/summary', [\App\Http\Controllers\Api\CartController::class, 'summary']);
+    Route::post('/cart/items', [\App\Http\Controllers\Api\CartController::class, 'addItem']);
+    Route::put('/cart/items/{cartItemId}', [\App\Http\Controllers\Api\CartController::class, 'updateItem']);
+    Route::delete('/cart/items/{cartItemId}', [\App\Http\Controllers\Api\CartController::class, 'removeItem']);
+    Route::delete('/cart', [\App\Http\Controllers\Api\CartController::class, 'clear']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         /**
