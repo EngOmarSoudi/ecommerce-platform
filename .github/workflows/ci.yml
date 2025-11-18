@@ -57,3 +57,6 @@ jobs:
 
       - name: PHP Code Sniffer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Static Analysis
+        run: ./vendor/bin/phpstan analyze --memory-limit=2G

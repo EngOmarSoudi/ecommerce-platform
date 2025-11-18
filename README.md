@@ -63,12 +63,45 @@ GET /api/health
 To run tests:
 ```bash
 docker-compose exec app php artisan test
+# or
+make test
 ```
 
 To run code style checks:
 ```bash
 docker-compose exec app ./vendor/bin/php-cs-fixer fix
+# or
+make fix
 ```
+
+To run static analysis:
+```bash
+docker-compose exec app ./vendor/bin/phpstan analyze
+# or
+make analyze
+```
+
+## Security
+
+### Secret Handling Guidelines
+
+1. **Never commit sensitive data** to the repository:
+   - Use `.env` for all environment-specific configurations
+   - Keep `.env` in `.gitignore`
+   - Use `.env.example` as a template with dummy values
+
+2. **Required secrets to configure**:
+   - `APP_KEY`: Generate with `php artisan key:generate`
+   - Database credentials: `DB_*` variables
+   - Mail credentials: `MAIL_*` variables  
+   - AWS credentials: `AWS_*` variables (if using S3)
+   - OAuth keys: Configure for social login providers
+
+3. **For production deployments**:
+   - Use environment variables or secret management services (AWS Secrets Manager, HashiCorp Vault)
+   - Rotate keys regularly
+   - Use strong, unique passwords
+   - Enable 2FA for all admin accounts
 
 ## License
 

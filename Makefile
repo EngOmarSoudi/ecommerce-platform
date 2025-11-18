@@ -37,6 +37,10 @@ fix:
 check:
 	./vendor/bin/php-cs-fixer fix --dry-run --diff
 
+# Run PHPStan static analysis
+analyze:
+	./vendor/bin/phpstan analyze --memory-limit=2G
+
 # Start Docker containers
 docker-up:
 	docker-compose up -d
@@ -57,4 +61,4 @@ docker-install:
 docker-migrate:
 	docker-compose exec app php artisan migrate
 
-.PHONY: install build key migrate test test-coverage serve fix check docker-up docker-down docker-test docker-install docker-migrate
+.PHONY: install build key migrate test test-coverage serve fix check analyze docker-up docker-down docker-test docker-install docker-migrate
