@@ -303,5 +303,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/orders', [\App\Http\Controllers\Api\OrderController::class, 'index']);
         Route::post('/orders', [\App\Http\Controllers\Api\OrderController::class, 'store']);
         Route::get('/orders/{orderId}', [\App\Http\Controllers\Api\OrderController::class, 'show']);
+        
+        // Recommendations
+        Route::get('/recommendations', [\App\Http\Controllers\Api\RecommendationController::class, 'index']);
+        Route::get('/recommendations/also-bought/{productId}', [\App\Http\Controllers\Api\RecommendationController::class, 'alsoBought']);
+        Route::get('/recommendations/similar/{productId}', [\App\Http\Controllers\Api\RecommendationController::class, 'similar']);
+        Route::get('/user/{userId}/score', [\App\Http\Controllers\Api\RecommendationController::class, 'userScore']);
     });
 });

@@ -13,3 +13,6 @@ Schedule::command('promotions:process-flash-sales')->everyMinute();
 
 // Schedule payout generation daily
 Schedule::command('payouts:generate')->daily();
+
+// Compute product similarities daily at 2 AM
+Schedule::command('recommendations:compute-similarities')->dailyAt('02:00');
