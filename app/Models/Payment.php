@@ -19,11 +19,13 @@ class Payment extends Model
         'status',
         'paid_at',
         'notes',
+        'gateway_response',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
         'paid_at' => 'datetime',
+        'gateway_response' => 'array',
     ];
 
     public function order()
