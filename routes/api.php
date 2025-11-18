@@ -212,6 +212,9 @@ Route::prefix('v1')->group(function () {
     Route::get('/products/{id}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
     Route::get('/products/sku/{sku}', [\App\Http\Controllers\Api\ProductController::class, 'getBySku']);
     
+    // Product Reviews (public - read only)
+    Route::get('/products/{productId}/reviews', [\App\Http\Controllers\Api\ProductReviewController::class, 'index']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         /**
@@ -279,5 +282,10 @@ Route::prefix('v1')->group(function () {
          * )
          */
         Route::put('/me', [\App\Http\Controllers\Api\AuthController::class, 'update']);
+        
+        // Product Reviews (protected - write operations)
+        Route::post('/products/{productId}/reviews', [\App\Http\Controllers\Api\ProductReviewController::class, 'store']);
+        Route::put('/products/{productId}/reviews/{reviewId}', [\App\Http\Controllers\Api\ProductReviewController::class, 'update']);
+        Route::delete('/products/{productId}/reviews/{reviewId}', [\App\Http\Controllers\Api\ProductReviewController::class, 'destroy']);
     });
 });
