@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\CartController;
 use App\Http\Controllers\Web\CategoryController;
+use App\Http\Controllers\Web\CheckoutController;
 use App\Http\Controllers\Web\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,7 @@ Route::post('/cart/items', [CartController::class, 'addItem'])->name('cart.addIt
 Route::put('/cart/items/{cartItemId}', [CartController::class, 'updateItem'])->name('cart.updateItem');
 Route::delete('/cart/items/{cartItemId}', [CartController::class, 'removeItem'])->name('cart.removeItem');
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+
+// Checkout routes
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])->name('checkout.storeAddress');
