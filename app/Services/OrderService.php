@@ -192,19 +192,50 @@ class OrderService
             $stockLevel->reserved_quantity -= $reservation['quantity'];
             $stockLevel->save();
 
-            // Create stock movement record
+            // Create stock movement record (order creation)
             StockMovement::create([
                 'sku_id' => $reservation['sku_id'],
                 'warehouse_id' => $stockLevel->warehouse_id,
-                'type' => 'sale',
+                'movement_type' => 'order_reserved',
                 'quantity' => -$reservation['quantity'],
                 'reference_type' => 'order',
                 'reference_id' => $order->id,
-                'notes' => "Order #{$order->order_number}",
+                'notes' => "Stock reserved for Order #{$order->order_number}",
             ]);
         }
 
         $order->update(['status' => 'confirmed']);
+    }
+
+    /**
+     * Decrement stock on shipment (called when order is shipped)
+     */
+    public function decrementStockOnShipment(Order $order): void
+    {
+        foreach ($order->items as $item) {
+            $stockLevel = StockLevel::where('sku_id', $item->sku_id)
+                ->lockForUpdate()
+                ->first();
+
+            if ($stockLevel) {
+                // Actual stock decrement happens on shipment
+                $stockLevel->quantity -= $item->quantity;
+                $stockLevel->save();
+
+                // Record shipment stock movement
+                StockMovement::create([
+                    'sku_id' => $item->sku_id,
+                    'warehouse_id' => $stockLevel->warehouse_id,
+                    'movement_type' => 'shipment',
+                    'quantity' => -$item->quantity,
+                    'reference_type' => 'order',
+                    'reference_id' => $order->id,
+                    'notes' => "Stock shipped for Order #{$order->order_number}",
+                ]);
+            }
+        }
+
+        $order->update(['status' => 'shipped']);
     }
 
     /**
