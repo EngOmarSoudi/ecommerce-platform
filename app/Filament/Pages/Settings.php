@@ -3,15 +3,23 @@
 namespace App\Filament\Pages;
 
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Pages\Page;
 use Filament\Notifications\Notification;
 
 class Settings extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static ?string $navigationGroup = 'System';
-    protected static string $view = 'filament.pages.settings';
+    protected string $view = 'filament.pages.settings';
+    
+    public static function getNavigationIcon(): ?string
+    {
+        return 'heroicon-o-cog-6-tooth';
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'System';
+    }
 
     public ?array $data = [];
 
@@ -27,9 +35,9 @@ class Settings extends Page
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Section::make('General Settings')
                     ->schema([

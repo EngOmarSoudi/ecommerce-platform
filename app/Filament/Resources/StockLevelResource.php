@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StockLevelResource\Pages;
 use App\Models\StockLevel;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,13 +13,21 @@ use Filament\Tables\Table;
 class StockLevelResource extends Resource
 {
     protected static ?string $model = StockLevel::class;
-    protected static ?string $navigationIcon = 'heroicon-o-cube';
-    protected static $navigationGroup = 'Inventory';
     protected static ?string $navigationLabel = 'Stock Levels';
-
-    public static function form(Form $form): Form
+    
+    public static function getNavigationIcon(): ?string
     {
-        return $form
+        return 'heroicon-o-cube';
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Inventory';
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
             ->schema([
                 Forms\Components\Section::make('Stock Information')
                     ->schema([

@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 
 class RevenueChartWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Revenue Overview';
+    protected ?string $heading = 'Revenue Overview';
     protected static ?int $sort = 2;
 
     protected function getData(): array

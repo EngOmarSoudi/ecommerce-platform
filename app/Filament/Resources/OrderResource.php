@@ -5,23 +5,30 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Infolists;
-use Filament\Infolists\Infolist;
 
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
-    protected static $navigationGroup = 'Sales';
     protected static ?int $navigationSort = 1;
-
-    public static function infolist(Infolist $infolist): Infolist
+    
+    public static function getNavigationIcon(): ?string
     {
-        return $infolist
+        return 'heroicon-o-shopping-cart';
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Sales';
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema
             ->schema([
                 Infolists\Components\Section::make('Order Details')
                     ->schema([
@@ -66,9 +73,9 @@ class OrderResource extends Resource
             ]);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 Forms\Components\Section::make('Order Information')
                     ->schema([

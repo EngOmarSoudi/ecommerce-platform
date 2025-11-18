@@ -10,20 +10,32 @@ class StockMovement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'warehouse_id',
-        'sku_id',
-        'movement_type',
+        'product_id',
         'quantity',
-        'reference_type',
-        'reference_id',
-        'notes',
+        'type',
+        'reason',
+        'old_quantity',
+        'new_quantity',
         'user_id',
+        'reference_id',
+        'reference_type',
     ];
 
     protected $casts = [
         'quantity' => 'integer',
-        'reference_id' => 'integer',
+        'old_quantity' => 'integer',
+        'new_quantity' => 'integer',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function warehouse()
     {
@@ -35,8 +47,8 @@ class StockMovement extends Model
         return $this->belongsTo(Sku::class);
     }
 
-    public function user()
+    public function reference()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }

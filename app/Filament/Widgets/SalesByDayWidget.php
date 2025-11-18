@@ -7,7 +7,7 @@ use Filament\Widgets\ChartWidget;
 
 class SalesByDayWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Sales by Day (30d)';
+    protected ?string $heading = 'Sales by Day (30d)';
     protected static ?int $sort = 5;
 
     protected function getType(): string

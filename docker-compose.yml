@@ -1,93 +1,128 @@
 version: '3.8'
 
 services:
-  # PHP Service
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ecommerce-platform-app
-    container_name: ecommerce-platform-app
+      target: production
+    container_name: ecommerce-app
     restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: dev
-    working_dir: /var/www
+    working_dir: /var/www/html
     volumes:
-      - ./:/var/www
-      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - app-network
-
-  # Nginx Service
-  webserver:
-    image: nginx:alpine
-    container_name: ecommerce-platform-webserver
-    restart: unless-stopped
-    tty: true
+      - ./storage:/var/www/html/storage
+      - ./public/uploads:/var/www/html/public/uploads
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
     ports:
       - "8000:80"
-    volumes:
-      - ./:/var/www
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - postgres
+      - redis
     networks:
-      - app-network
+      - ecommerce-network
 
-  # MySQL Service
-  db:
-    image: mysql:8.0
-    container_name: ecommerce-platform-db
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecommerce-postgres
     restart: unless-stopped
-    tty: true
-    ports:
-      - "3306:3306"
     environment:
-      MYSQL_DATABASE: ecommerce
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_PASSWORD: ecommerce
-      MYSQL_USER: ecommerce
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - dbdata:/var/lib/mysql
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
-      - app-network
+      - ecommerce-network
 
-  # Redis Service
   redis:
-    image: redis:alpine
-    container_name: ecommerce-platform-redis
+    image: redis:7-alpine
+    container_name: ecommerce-redis
     restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
     ports:
       - "6379:6379"
     networks:
-      - app-network
+      - ecommerce-network
 
-  # Meilisearch Service
-  meilisearch:
-    image: getmeili/meilisearch:latest
-    container_name: ecommerce-platform-meilisearch
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: ecommerce-worker
     restart: unless-stopped
-    ports:
-      - "7700:7700"
-    environment:
-      MEILI_MASTER_KEY: masterKey
-      MEILI_ENV: development
+    working_dir: /var/www/html
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
     volumes:
-      - meilisearchdata:/meili_data
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      - postgres
+      - redis
     networks:
-      - app-network
+      - ecommerce-network
 
-# Docker Networks
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: ecommerce-scheduler
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: /bin/sh -c "while true; do php artisan schedule:run; sleep 60; done"
+    volumes:
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - ecommerce-network
+
 networks:
-  app-network:
+  ecommerce-network:
     driver: bridge
 
-# Volumes
 volumes:
-  dbdata:
+  postgres-data:
     driver: local
-  meilisearchdata:
+  redis-data:
     driver: local

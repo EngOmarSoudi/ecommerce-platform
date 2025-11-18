@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SeoMetaResource\Pages;
 use App\Models\SeoMeta;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,12 +13,20 @@ use Filament\Tables\Table;
 class SeoMetaResource extends Resource
 {
     protected static ?string $model = SeoMeta::class;
-    protected static ?string $navigationIcon = 'heroicon-o-code-bracket-square';
-    protected static $navigationGroup = 'CMS';
-
-    public static function form(Form $form): Form
+    
+    public static function getNavigationIcon(): ?string
     {
-        return $form
+        return 'heroicon-o-code-bracket-square';
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'CMS';
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
             ->schema([
                 Forms\Components\TextInput::make('path')->required()->unique(ignoreRecord: true),
                 Forms\Components\TextInput::make('title')->nullable(),

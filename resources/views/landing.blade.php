@@ -24,12 +24,14 @@
         <meta name="keywords" content="ecommerce, shop, checkout, recommendations, delivery">
     </section>
 
+    @php($sectionsByKey = collect($sections ?? [])->keyBy('key'))
+    @php($hero = $sectionsByKey['hero'] ?? null)
     <!-- Hero -->
     <section class="section bg-gradient-to-br from-brand.primary/10 to-brand.secondary/10">
         <div class="container grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">Sell faster with a next‑gen commerce stack</h2>
-                <p class="mt-4 text-lg text-gray-700">Powerful catalog, smart promotions, seamless checkout, and built‑in shipping & payments — all in one platform.</p>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">{{ data_get($hero, 'content.title', 'Sell faster with a next‑gen commerce stack') }}</h2>
+                <p class="mt-4 text-lg text-gray-700">{{ data_get($hero, 'content.subtitle', 'Powerful catalog, smart promotions, seamless checkout, and built‑in shipping & payments — all in one platform.') }}</p>
                 <div class="mt-6 flex flex-wrap gap-3">
                     <a href="/register" class="btn-primary">Start Free Trial</a>
                     <a href="/products" class="btn-outline">Explore Catalog</a>
@@ -46,6 +48,19 @@
             </div>
         </div>
     </section>
+
+    @if(!empty($banners))
+    <section class="section">
+        <div class="container grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($banners as $banner)
+                <a href="{{ $banner->link_url ?? '#' }}" class="card card-hover">
+                    <img src="{{ $banner->image_path }}" alt="{{ $banner->title }}" class="radius-lg">
+                    <h4 class="mt-3 text-xl font-semibold">{{ $banner->title }}</h4>
+                </a>
+            @endforeach
+        </div>
+    </section>
+    @endif
 
     <!-- Features -->
     <section id="features" class="section">

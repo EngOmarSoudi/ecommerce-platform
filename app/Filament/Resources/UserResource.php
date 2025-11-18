@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,12 +14,20 @@ use Illuminate\Support\Facades\Hash;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-    protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static $navigationGroup = 'Users & Access';
-
-    public static function form(Form $form): Form
+    
+    public static function getNavigationIcon(): ?string
     {
-        return $form
+        return 'heroicon-o-users';
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Users & Access';
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
             ->schema([
                 Forms\Components\Section::make('User Information')
                     ->schema([

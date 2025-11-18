@@ -4,8 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
+use App\Enums\NavigationGroup;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,13 +15,21 @@ use Illuminate\Support\Str;
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
-    protected static ?string $navigationIcon = 'heroicon-o-folder';
-    protected static $navigationGroup = 'Products';
     protected static ?int $navigationSort = 2;
-
-    public static function form(Form $form): Form
+    
+    public static function getNavigationIcon(): ?string
     {
-        return $form
+        return 'heroicon-o-folder';
+    }
+    
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Products';
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
             ->schema([
                 Forms\Components\Section::make('Category Information')
                     ->schema([
