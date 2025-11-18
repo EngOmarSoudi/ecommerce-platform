@@ -1,7 +1,7 @@
 @props(['product'])
 
 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-    <a href="{{ route('products.show', $product->id) }}" class="block">
+    <a href="{{ route('products.show', $product->slug) }}" class="block">
         <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
             @if($product->media->first())
                 <img src="{{ $product->media->first()->url }}" alt="{{ $product->name }}" class="h-48 w-full object-cover object-center">
